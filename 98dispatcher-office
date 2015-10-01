@@ -5,6 +5,7 @@ STATUS=$2
 #user-defined variables - network interface and ESSID to monitor, and user to start scripts when all conditions are met
 INTERFACE=wlan0
 NETWORK=office-network
+VPN=tun0
 USER=user
 
 export DISPLAY=:0.0
@@ -37,4 +38,9 @@ if [ "$IF" = "$INTERFACE" ] && [ "$STATUS" = "up" ] && [ "$ESSID" = "$NETWORK" ]
 	if check_for_process pidgin; then
 		/usr/bin/su $USER -c "/usr/bin/pidgin"
 	fi
+elif [ "$IF" = "$VPN" ] && [ "$STATUS" = "up" ]; then #really basic support for VPN; if you have multiple VPNs configured, you will need to expand on this
+	wait_for_process nm-applet
+    if check_for_process user_script; then
+		/usr/bin/su $USER -c "/bin/bash /home/$USER/bin/user_script.sh"
+	fi	
 fi

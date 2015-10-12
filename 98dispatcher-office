@@ -13,15 +13,15 @@ ESSID=$(iwconfig $INTERFACE | sed -rn 's/.*ESSID:\"(.*)\".*/\1/p') #obtain ESSID
 
 wait_for_process() { #this function waits for a specific process to be running before proceeding, e.g nm-applet
 	PNAME=$1
-	PID=`/usr/bin/pgrep $PNAME`
+	PID=$(/usr/bin/pgrep $PNAME)
 	while [ -z "$PID" ]; do
 		sleep 3;
-		PID=`/usr/bin/pgrep $PNAME`
+		PID=$(/usr/bin/pgrep $PNAME)
 	done
 }
 
 check_for_process() { #this function checks whether a process isn't already running to prevent it from being opened a second time in case of reconnection
-	SEMAFOR=`/usr/bin/pgrep -f $1`
+	SEMAFOR=$(/usr/bin/pgrep -f $1)
 	if [ -z "$SEMAFOR" ]; then
 		return 0
 	else
@@ -30,17 +30,17 @@ check_for_process() { #this function checks whether a process isn't already runn
 }
 
 if [ "$IF" = "$INTERFACE" ] && [ "$STATUS" = "up" ] && [ "$ESSID" = "$NETWORK" ]; then
-    wait_for_process nm-applet
-    #list of applications and user scripts to be run when conditions are met
-    if check_for_process user_script; then
-		/usr/bin/su $USER -c "/bin/bash /home/$USER/bin/user_script.sh"
-	fi
-	if check_for_process pidgin; then
-		/usr/bin/su $USER -c "/usr/bin/pidgin"
-	fi
+        wait_for_process nm-applet
+        #list of applications and user scripts to be run when conditions are met
+        if check_for_process user_script; then
+	       /usr/bin/su $USER -c "/bin/bash /home/$USER/bin/user_script.sh"
+        fi
+        if check_for_process pidgin; then
+	       /usr/bin/su $USER -c "/usr/bin/pidgin"
+        fi
 elif [ "$IF" = "$VPN" ] && [ "$STATUS" = "up" ]; then #really basic support for VPN; if you have multiple VPNs configured, you will need to expand on this
-	wait_for_process nm-applet
-    if check_for_process user_script; then
-		/usr/bin/su $USER -c "/bin/bash /home/$USER/bin/user_script.sh"
-	fi	
+        wait_for_process nm-applet
+        if check_for_process user_script; then
+               /usr/bin/su $USER -c "/bin/bash /home/$USER/bin/user_script.sh"
+        fi	
 fi

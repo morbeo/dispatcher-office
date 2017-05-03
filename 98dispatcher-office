@@ -21,8 +21,7 @@ wait_for_process() { #this function waits for a specific process to be running b
 }
 
 check_for_process() { #this function checks whether a process isn't already running to prevent it from being opened a second time in case of reconnection
-	SEMAFOR=$(/usr/bin/pgrep -f $1)
-	if [ -z "$SEMAFOR" ]; then
+	if (/usr/bin/pgrep -qf $1); then
 		return 0
 	else
 		return 1

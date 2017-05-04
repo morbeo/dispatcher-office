@@ -9,7 +9,7 @@ VPN=tun0
 USER=user
 
 export DISPLAY=:0.0
-ESSID=$(iwconfig $INTERFACE | sed -rn 's/.*ESSID:\"(.*)\".*/\1/p') #obtain ESSID
+ESSID=$(iwconfig $INTERFACE | sed -rn 's/.*ESSID:\"(.*)\".*/\1/p') 
 
 # Wait for a specific process to be running before proceeding, e.g nm-applet
 wait_for_process() { 
@@ -20,7 +20,7 @@ wait_for_process() {
 
 # Check for collison
 check_for_process() { 
-	/usr/bin/pgrep -qf $1
+	/usr/bin/pgrep -qf "$1"
 }
 
 if [ "$IF" = "$INTERFACE" ] && [ "$STATUS" = "up" ] && [ "$ESSID" = "$NETWORK" ]; then
